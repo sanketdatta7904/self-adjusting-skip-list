@@ -1,0 +1,34 @@
+
+
+Self-Adjusting SkipLists
+
+
+MILESTONE 1: Implementation of a classical randomized SkipList [~2 weeks]
+The data structure should feature updates (element insertion/deletion).
+
+MILESTONE 2: Modelling and generating data streams [~1 week]
+Different data streams should be implemented to serve as benchmark request sequences.
+For example, elements could be uniformly distributed or exponentially distributed over a given range.
+The length of the produced data stream should be adjustable with an input parameter.
+
+MILESTOME 3: Implementation of a self-adjusting SkipList [~3 weeks]
+The data structure should now be modified based on the request sream. 
+Whenever an element is requested, it should be promoted.
+Several promoting strategies should be implemented for comparison, e.g.
+- promote by one level
+- promote to top
+- promote by a random number of lavels (capped at top)
+
+MILESTOME 4: Engineering [~1 week]
+Engineering methods should be applied to improve the space soncumption and the search time of the data structure.
+For example, redundant lists could be effciiently identified and deleted.
+
+
+MILESTONE 4: Evaluation [~1 week]
+The classical SkipList and the self-adjusting variants should be compared on different data streams with respect to
+- the update times after a request
+- the number of comparisons it takes to process all requests
+
+MILESTONE 5: Report [~ 3 weeks]
+The algorithms and the experimental findings should be documented in a report.
+
