@@ -1,4 +1,5 @@
 from skiplist import Skiplist, Exception
+from basic_skiplist import Basic_skiplist
 
 def testOption():
     option = 0
@@ -44,4 +45,4 @@ def testIntKeyValues(dict):
             quit()
         dict.display()
 
-testIntKeyValues(Skiplist())
+testIntKeyValues(Basic_skiplist())
