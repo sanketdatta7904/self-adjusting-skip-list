@@ -29,6 +29,7 @@ class Skiplist:
         self.elements_count = 0
         self.levels_count = 0
         self.top_left_element = None
+        self.level_element_count = {}
 
         # insert two top level sentinel nodes at the start with one containing negative infinity
         # and the other containing positive infinity, is to provide boundary conditions. Also to provide
@@ -50,40 +51,53 @@ class Skiplist:
         # otherwise, increment the element count and insert the new element
         self.elements_count = self.elements_count + 1
         element = self.insert_after_above(pointer, None, key, value)
+        level = 0
+        # Keeping track of every level's element count
+        self.increase_level_count(level)
+
+        
+        
         count = 1
         while random.random() > 0.5:
             # flip a coin to determine whether to insert a new level
             count = count + 1
+            level = level + 1
             while pointer.above is None:
                 pointer = pointer.before
 
             pointer = pointer.above
             element = self.insert_after_above(pointer, element, key, value)
 
+            self.increase_level_count(level)
+            
+
             if count >= self.levels_count:
                 self.insert_top_level()
+    
+    def increase_level_count(self, level):
+        if (level in self.level_element_count):
+            self.level_element_count[level] = self.level_element_count[level] + 1  
+        else:
+            self.level_element_count[level] = 1
 
     def remove_element(self, key):
         # start at the top left element and find the element with the given key
-        pointer, key,value, depthOfnode = self.find_first_occurrence(key)
+        pointer, key, value, depthOfnode = self.find_first_occurrence(key)
         # raise a custom exception indicating the key was not found
         if pointer.key != key:
             raise Exception('NOT_FOUND')
         # remove the element from all levels of the skip list
         while pointer is not None:
-            if(pointer.before.key == -math.inf and pointer.after.key == math.inf):                
-            #   Remove empty levels in the top
+            if(pointer.before.key == -math.inf and pointer.after.key == math.inf):
+                #   Remove empty levels in the top
                 pointer.before.above = None
-                pointer.after.above = None    
-                self.levels_count = self.levels_count -1
+                pointer.after.above = None
+                self.levels_count = self.levels_count - 1
                 self.top_left_element = pointer.before
             pointer.before.after = pointer.after
             pointer.after.before = pointer.before
             pointer = pointer.below
         self.elements_count = self.elements_count - 1
-
-
-  
 
     def find_first_occurrence(self, key):
         # start at the top left element and find the element with the given key (if it exists)

@@ -4,10 +4,10 @@ from basic_skiplist import Basic_skiplist
 from promote_top_skiplist import Promote_top_skiplist
 from promote_one_level_skiplist import Promote_one_level_skiplist
 from promote_random_level_skiplist import Promote_random_level_skiplist
-
+import json
 
 def test_insert():
-    s = Basic_skiplist()
+    s = Promote_one_level_skiplist()
     s.insert(5, "five")
     s.insert(2, "two")
     s.insert(8, "eight")
@@ -17,10 +17,14 @@ def test_insert():
     s.insert(7, "seven")
     s.insert(6, "six")
     s.display()
-    n = int(input())
-    s.remove_element(n)
-    # s.findElementImp1(5)
-    s.display()
+    print(json.dumps(s.level_element_count))
+    # n = int(input())
+    # # s.remove_element(n)
+    # while(n!= 0):
+    #     s.find_and_elevate_one_level(n)
+    #     s.display()
+    #     n = int(input())
+
 
 
 test_insert()

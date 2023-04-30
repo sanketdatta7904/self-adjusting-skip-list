@@ -11,6 +11,7 @@ def uniform_data_gen(num):
         skiplist.insert(data_point, data_point)
     skiplist.display()
     print("Size>>", skiplist.size())
+    print("Level count>>", skiplist.levels_count)
 
 
 def exp_data_gen(num_points, lambd):
@@ -24,7 +25,7 @@ def exp_data_gen(num_points, lambd):
 
 
 # example usage
-num_points = 1000
+num_points = 10000
 lambd = 0.3
 # exp_data_gen(num_points, lambd)
 
