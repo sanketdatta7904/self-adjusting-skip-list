@@ -65,20 +65,25 @@ class Skiplist:
 
     def remove_element(self, key):
         # start at the top left element and find the element with the given key
-        found_element = pointer = self.locate_key(key)
-
+        pointer, key,value, depthOfnode = self.find_first_occurrence(key)
+        # raise a custom exception indicating the key was not found
+        if pointer.key != key:
+            raise Exception('NOT_FOUND')
         # remove the element from all levels of the skip list
         while pointer is not None:
+            if(pointer.before.key == -math.inf and pointer.after.key == math.inf):                
+            #   Remove empty levels in the top
+                pointer.before.above = None
+                pointer.after.above = None    
+                self.levels_count = self.levels_count -1
+                self.top_left_element = pointer.before
             pointer.before.after = pointer.after
             pointer.after.before = pointer.before
-            pointer = pointer.above
+            pointer = pointer.below
+        self.elements_count = self.elements_count - 1
 
-        # if the key was found, return its value
-        if found_element.key == key:
-            return found_element.value
-        # otherwise, raise a custom exception indicating the key was not found
-        else:
-            raise Exception('NOT_FOUND')
+
+  
 
     def find_first_occurrence(self, key):
         # start at the top left element and find the element with the given key (if it exists)

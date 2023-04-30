@@ -7,7 +7,7 @@ from promote_random_level_skiplist import Promote_random_level_skiplist
 
 
 def test_insert():
-    s = Promote_random_level_skiplist()
+    s = Basic_skiplist()
     s.insert(5, "five")
     s.insert(2, "two")
     s.insert(8, "eight")
@@ -17,7 +17,8 @@ def test_insert():
     s.insert(7, "seven")
     s.insert(6, "six")
     s.display()
-    s.find_and_elevate_to_random_levels(10)
+    n = int(input())
+    s.remove_element(n)
     # s.findElementImp1(5)
     s.display()
 
