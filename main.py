@@ -3,9 +3,9 @@ from skiplist import  Skiplist
 from basic_skiplist import Basic_skiplist
 from promote_top_skiplist import Promote_top_skiplist
 from promote_one_level_skiplist import PromoteOneLevelSkiplist
-
+from promote_random_level_skiplist import Promote_random_level_skiplist
 def test_insert():
-        s = PromoteOneLevelSkiplist()
+        s = Promote_random_level_skiplist()
         s.insert(5, "five")
         s.insert(2, "two")
         s.insert(8, "eight")
