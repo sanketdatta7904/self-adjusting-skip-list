@@ -3,20 +3,24 @@ import random
 import copy
 
 # define custom exception class specially for remove element function if element isnot found
+
+
 class Exception(Exception):
     pass
 
 # define node class for the skip list
+
+
 class Node:
 
     def __init__(self):
         # initialize all four directional pointers and value/key to None
-        self.after  = None
-        self.above  = None
+        self.after = None
+        self.above = None
         self.before = None
-        self.below  = None
-        self.value  = None
-        self.key    = None
+        self.below = None
+        self.value = None
+        self.key = None
 
 
 class Skiplist:
@@ -26,9 +30,9 @@ class Skiplist:
         self.levels_count = 0
         self.top_left_element = None
 
-        # insert two top level sentinel nodes at the start with one containing negative infinity 
+        # insert two top level sentinel nodes at the start with one containing negative infinity
         # and the other containing positive infinity, is to provide boundary conditions. Also to provide
-        # efficient access to the beginning and end of the skip list 
+        # efficient access to the beginning and end of the skip list
         self.insert_top_level()
         self.insert_top_level()
 
@@ -50,10 +54,10 @@ class Skiplist:
         while random.random() > 0.5:
             # flip a coin to determine whether to insert a new level
             count = count + 1
-            while pointer.above is None: 
+            while pointer.above is None:
                 pointer = pointer.before
 
-            pointer = pointer.above     
+            pointer = pointer.above
             element = self.insert_after_above(pointer, element, key, value)
 
             if count >= self.levels_count:
@@ -76,22 +80,25 @@ class Skiplist:
         else:
             raise Exception('NOT_FOUND')
 
-    # def findElement(self, key):
-    #     # start at the top left element and find the element with the given key (if it exists)
-    #     element = self.locate_key(key, exact_match=True)
-
-    #     # if the key was found, return its value
-    #     return element.value if element else None
+    def find_first_occurrence(self, key):
+        # start at the top left element and find the element with the given key (if it exists)
+        element = self.locate_key(key, exact_match=True, first_occur=True)
+        depthOfnode = 1
+        copyElem = copy.deepcopy(element)
+        while(copyElem.below is not None):
+            depthOfnode = depthOfnode+1
+            copyElem = copyElem.below
+        return (element, element.key, element.value, depthOfnode)
 
     def size(self):
         # return the current element count
         return self.elements_count
 
-    def closestKeyAfter(self, key):
+    def closest_key_after(self, key):
         #  returns the key of the smallest element greater than the given key in the Skip List.
         return self.locate_closest_key(key, 'after')
 
-    def closestKeyBefore(self, key):
+    def closest_key_before(self, key):
         # returns the key of the largest element less than or equal to the given key in the Skip List.
         return self.locate_closest_key(key, 'before')
 
@@ -114,7 +121,7 @@ class Skiplist:
             element = element.after
         print('-' * 16)
 
-    def locate_key(self, key, exact_match=False, first_occur = False):
+    def locate_key(self, key, exact_match=False, first_occur=False):
         pointer = self.top_left_element
         # Traverse down the skip list until reaching the bottom level
         while pointer.below is not None:
@@ -125,12 +132,10 @@ class Skiplist:
                 if(first_occur == True and pointer.key == key):
                     return pointer
         # If an exact match is required and the found element's key is not equal to the given key, return None else return pointer
-        if (exact_match and pointer.key != key ):
-            return None 
+        if (exact_match and pointer.key != key):
+            return None
         else:
             return pointer
-        
-
 
     def locate_closest_key(self, key, target):
         # Locate the node with the exact match for the given key
@@ -140,7 +145,8 @@ class Skiplist:
         if located_element:
             target_element = getattr(located_element, target)
             # Check if the target element is infinity, which means there are no keys after/before the input key
-            is_inf = (target_element.value == math.inf or target_element.value == -math.inf)
+            is_inf = (target_element.value ==
+                      math.inf or target_element.value == -math.inf)
 
             if target_element and not is_inf:
                 return target_element.key
@@ -156,25 +162,16 @@ class Skiplist:
         self.top_left_element.before = self.insert_after_above(
             self.top_left_element, self.top_left_element.after, math.inf, math.inf
         )
-        #   if(self.top_left_element.below is not None):
-
-        #     self.top_left_element.after = self.insert_after_above(
-        #     self.top_left_element, self.top_left_element.below.after, math.inf, math.inf
-        #     )
-        # else:
-        #     self.top_left_element.after = self.insert_after_above(
-        #     self.top_left_element, self.top_left_element.after, math.inf, math.inf
-        #     )
 
     def insert_after_above(self, after, above, key, value):
         # Takes key and value pair and inserts new node with given level
         # after is the place after which the node should come-- after(left) >> node
         # above is the place above which the node should come-- above(down)>> node(up)
         node = Node()
-        node.key        = key
-        node.value    = value
+        node.key = key
+        node.value = value
         node.before = after
-        node.below    = above
+        node.below = above
 
         if after is not None:
             node.after = after.after
@@ -183,6 +180,6 @@ class Skiplist:
             after.after = node
 
         if above is not None:
-            node.above    = above.above
+            node.above = above.above
             above.above = node
         return node
