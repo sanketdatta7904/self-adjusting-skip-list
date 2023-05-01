@@ -50,10 +50,10 @@ class Skiplist:
 
         # otherwise, increment the element count and insert the new element
         self.elements_count = self.elements_count + 1
-        element = self.insert_after_above(pointer, None, key, value)
         level = 0
+        element = self.insert_after_above(pointer, None, key, value, level)
         # Keeping track of every level's element count
-        self.increase_level_count(level)
+        # self.increase_level_count(level)
 
         
         
@@ -66,9 +66,9 @@ class Skiplist:
                 pointer = pointer.before
 
             pointer = pointer.above
-            element = self.insert_after_above(pointer, element, key, value)
+            element = self.insert_after_above(pointer, element, key, value, level)
 
-            self.increase_level_count(level)
+            # self.increase_level_count(level)
             
 
             if count >= self.levels_count:
@@ -80,14 +80,20 @@ class Skiplist:
         else:
             self.level_element_count[level] = 1
 
+    def decrease_level_count(self, level):
+        if (level in self.level_element_count):
+            self.level_element_count[level] = self.level_element_count[level] - 1  
+
+
     def remove_element(self, key):
         # start at the top left element and find the element with the given key
-        pointer, key, value, depthOfnode = self.find_first_occurrence(key)
+        pointer, key, value, depth_of_node = self.find_first_occurrence(key)
         # raise a custom exception indicating the key was not found
         if pointer.key != key:
             raise Exception('NOT_FOUND')
         # remove the element from all levels of the skip list
         while pointer is not None:
+            depth_of_node = depth_of_node-1
             if(pointer.before.key == -math.inf and pointer.after.key == math.inf):
                 #   Remove empty levels in the top
                 pointer.before.above = None
@@ -96,6 +102,7 @@ class Skiplist:
                 self.top_left_element = pointer.before
             pointer.before.after = pointer.after
             pointer.after.before = pointer.before
+            self.decrease_level_count(depth_of_node)
             pointer = pointer.below
         self.elements_count = self.elements_count - 1
 
@@ -176,13 +183,13 @@ class Skiplist:
         # Enter a new level with -infinity(left) and +infinity(right) at the top of the skiplist
         self.levels_count = self.levels_count + 1
         self.top_left_element = self.insert_after_above(
-            None, self.top_left_element, -math.inf, -math.inf
+            None, self.top_left_element, -math.inf, -math.inf, None
         )
         self.top_left_element.before = self.insert_after_above(
-            self.top_left_element, self.top_left_element.after, math.inf, math.inf
+            self.top_left_element, self.top_left_element.after, math.inf, math.inf, None
         )
 
-    def insert_after_above(self, after, above, key, value):
+    def insert_after_above(self, after, above, key, value, level):
         # Takes key and value pair and inserts new node with given level
         # after is the place after which the node should come-- after(left) >> node
         # above is the place above which the node should come-- above(down)>> node(up)
@@ -201,4 +208,7 @@ class Skiplist:
         if above is not None:
             node.above = above.above
             above.above = node
+        if(level is not None):
+            self.increase_level_count(level)
+
         return node

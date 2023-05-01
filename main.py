@@ -18,12 +18,13 @@ def test_insert():
     s.insert(6, "six")
     s.display()
     print(json.dumps(s.level_element_count))
-    # n = int(input())
-    # # s.remove_element(n)
-    # while(n!= 0):
-    #     s.find_and_elevate_one_level(n)
-    #     s.display()
-    #     n = int(input())
+    n = int(input())
+    while(n!= 0):
+        s.remove_element(n)
+        s.display()
+        print(json.dumps(s.level_element_count))
+
+        n = int(input())
 
 
 

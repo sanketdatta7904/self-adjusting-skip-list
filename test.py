@@ -1,5 +1,6 @@
 from skiplist import Skiplist, Exception
 from basic_skiplist import Basic_skiplist
+from promote_one_level_skiplist import Promote_one_level_skiplist
 
 
 def test_with_option():
@@ -49,4 +50,4 @@ def test_controller(skiplist):
         skiplist.display()
 
 
-test_controller(Basic_skiplist())
+test_controller(Promote_one_level_skiplist())
