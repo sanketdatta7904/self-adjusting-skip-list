@@ -26,7 +26,7 @@ def test_controller(skiplist):
             lst = st.split()
             key = int(lst[0])
             val = int(lst[1])
-            oldVal = skiplist.insert(key, val)
+            oldVal = skiplist.search_and_insert(key, val)
             print('Old value = {}'.format(oldVal))
         elif option == 2:
             # delete operation
@@ -39,7 +39,7 @@ def test_controller(skiplist):
         elif option == 3:
             # find operation
             key = int(input('Enter integer key to be looked up: '))
-            val = skiplist.find_element(key)
+            val = skiplist.find_and_elevate_one_level(key)
             if val == None:
                 print('Key {} not found'.format(key))
             else:

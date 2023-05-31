@@ -31,6 +31,8 @@ class Skiplist:
         self.top_left_element = None
         self.level_element_count = {}
 
+        self.num_of_comparison = 0
+
         # insert two top level sentinel nodes at the start with one containing negative infinity
         # and the other containing positive infinity, is to provide boundary conditions. Also to provide
         # efficient access to the beginning and end of the skip list
@@ -39,8 +41,8 @@ class Skiplist:
 
     def insert(self, key, value):
         # start at the top left element and find the element with the given key (if it exists)
-        found_element = self.locate_key(key)
-        pointer = self.locate_key(key)
+        found_element, no_of_ops = self.locate_key(key)
+        pointer = found_element
 
         # if the key already exists, update its value and return the old value
         if found_element.key == key:
@@ -73,6 +75,8 @@ class Skiplist:
 
             if count >= self.levels_count:
                 self.insert_top_level()
+
+        return no_of_ops
     
     def increase_level_count(self, level):
         if (level in self.level_element_count):
@@ -108,13 +112,15 @@ class Skiplist:
 
     def find_first_occurrence(self, key):
         # start at the top left element and find the element with the given key (if it exists)
-        element = self.locate_key(key, exact_match=True, first_occur=True)
+        element, no_of_ops = self.locate_key(key, exact_match=True, first_occur=True)
+        if(element == None):
+            return (None, None, None, None, 0)
         depthOfnode = 1
-        copyElem = copy.deepcopy(element)
+        copyElem = element
         while(copyElem.below is not None):
             depthOfnode = depthOfnode+1
             copyElem = copyElem.below
-        return (element, element.key, element.value, depthOfnode)
+        return (element, element.key, element.value, depthOfnode, no_of_ops)
 
     def size(self):
         # return the current element count
@@ -148,20 +154,25 @@ class Skiplist:
         print('-' * 16)
 
     def locate_key(self, key, exact_match=False, first_occur=False):
+        no_of_ops = 0
         pointer = self.top_left_element
         # Traverse down the skip list until reaching the bottom level
         while pointer.below is not None:
             pointer = pointer.below
+            no_of_ops = no_of_ops+1
         # Traverse right until finding the largest element with a key less than or equal to the given key
             while pointer.after.key <= key:
                 pointer = pointer.after
+                no_of_ops  = no_of_ops +1
                 if(first_occur == True and pointer.key == key):
-                    return pointer
+                    return pointer, no_of_ops
         # If an exact match is required and the found element's key is not equal to the given key, return None else return pointer
         if (exact_match and pointer.key != key):
-            return None
+            return None, no_of_ops
         else:
-            return pointer
+            return pointer, no_of_ops
+        
+
 
     def locate_closest_key(self, key, target):
         # Locate the node with the exact match for the given key
@@ -182,6 +193,7 @@ class Skiplist:
     def insert_top_level(self):
         # Enter a new level with -infinity(left) and +infinity(right) at the top of the skiplist
         self.levels_count = self.levels_count + 1
+
         self.top_left_element = self.insert_after_above(
             None, self.top_left_element, -math.inf, -math.inf, None
         )
@@ -216,9 +228,16 @@ class Skiplist:
     def remove_level(self, level, pointer):
         while(pointer.key != -math.inf):
             pointer = pointer.before
-        while(pointer.key != math.inf):
-            pointer.below = pointer.below.below
-            pointer = pointer.after
+        if(pointer.below.below != None):
+            while(pointer.key != math.inf):
+                temp = pointer.below.below
+                temp.above = pointer
+                pointer.below = pointer.below.below
+                pointer = pointer.after
+        else:
+            while(pointer.key != math.inf):
+                pointer.below = None
+                pointer = pointer.after
         self.recount_level_element(level)
         self.levels_count = self.levels_count -1
 
