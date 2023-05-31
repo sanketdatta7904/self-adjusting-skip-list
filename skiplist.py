@@ -212,3 +212,28 @@ class Skiplist:
             self.increase_level_count(level)
 
         return node
+    
+    def remove_level(self, level, pointer):
+        while(pointer.key != -math.inf):
+            pointer = pointer.before
+        while(pointer.key != math.inf):
+            pointer.below = pointer.below.below
+            pointer = pointer.after
+        self.recount_level_element(level)
+        self.levels_count = self.levels_count -1
+
+    def recount_level_element(self, level):
+        del self.level_element_count[level]
+        for key in list(self.level_element_count.keys()):
+            if(key >level):
+                self.level_element_count[key-1] = self.level_element_count.pop(key)
+
+    def clean_skiplist(self):
+        pointer = self.top_left_element
+        while(pointer.below.after.key == math.inf):
+            pointer = pointer.below
+            pointer.above = None
+            pointer.after.above = None
+            self.levels_count = self.levels_count - 1
+            self.top_left_element = pointer   
+                 
