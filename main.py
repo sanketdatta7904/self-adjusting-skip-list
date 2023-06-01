@@ -7,7 +7,7 @@ from promote_random_level_skiplist import Promote_random_level_skiplist
 import json
 
 def test_insert():
-    s = Basic_skiplist()
+    s = Promote_random_level_skiplist()
     s.search_and_insert(5, "five")
     s.search_and_insert(2, "two")
     s.search_and_insert(8, "eight")
