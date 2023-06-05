@@ -66,6 +66,7 @@ def exp_data_gen(size):
     print(">>>>>>>", skiplist1.level_element_count)
     print("Level count>>", skiplist1.levels_count)
     print("no of comp", skiplist1.num_of_comparison)
+    
 
     print("Size>>", skiplist2.size())
     print(">>>>>>>", skiplist2.level_element_count)
@@ -76,9 +77,9 @@ def exp_data_gen(size):
 
 
 # example usage
-num_points = 1000
+num_points = 1000000
 scale = 1.2
-limit = 1000
+limit = 100000
 
 
-exp_data_gen(num_points)
+uniform_data_gen(num_points)

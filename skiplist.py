@@ -59,8 +59,10 @@ class Skiplist:
 
         
         
+        prob = 0.5
+
         count = 1
-        while random.random() > 0.5:
+        while random.random() > prob:
             # flip a coin to determine whether to insert a new level
             count = count + 1
             level = level + 1
@@ -75,6 +77,9 @@ class Skiplist:
 
             if count >= self.levels_count:
                 self.insert_top_level()
+                if(self.levels_count>15):
+                    logn = math.log2(self.elements_count)
+                    prob = 1-(1/logn)
 
         return no_of_ops
     
