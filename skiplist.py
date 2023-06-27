@@ -96,7 +96,7 @@ class Skiplist:
 
     def remove_element(self, key):
         # start at the top left element and find the element with the given key
-        pointer, key, value, depth_of_node = self.find_first_occurrence(key)
+        pointer, key, value, depth_of_node, no_of_ops = self.find_first_occurrence(key)
         # raise a custom exception indicating the key was not found
         if pointer.key != key:
             raise Exception('NOT_FOUND')
@@ -230,6 +230,7 @@ class Skiplist:
 
         return node
     
+    #  remove a specific level from the skip list. It takes two parameters: level (the level to be removed) and pointer (a pointer to the element at the top left of the level).
     def remove_level(self, level, pointer):
         while(pointer.key != -math.inf):
             pointer = pointer.before
@@ -246,12 +247,14 @@ class Skiplist:
         self.recount_level_element(level)
         self.levels_count = self.levels_count -1
 
+#  This function is used to update the level_element_count dictionary after a level has been removed from the skip list
     def recount_level_element(self, level):
         del self.level_element_count[level]
         for key in list(self.level_element_count.keys()):
             if(key >level):
                 self.level_element_count[key-1] = self.level_element_count.pop(key)
 
+# used to clean up the skip list by removing any empty levels at the top
     def clean_skiplist(self):
         pointer = self.top_left_element
         while(pointer.below.after.key == math.inf):
