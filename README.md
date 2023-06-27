@@ -1,5 +1,9 @@
 
 Skiplist Experiment in python(4 variations)
+> Basic skiplist
+> Promote one level up
+> Promote to top level
+> Promote to random level
 
 packages used: time, math, random
 
